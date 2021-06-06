@@ -13,7 +13,9 @@ import
   stew/[byteutils, results],
   # Internal
   ../ssz/merkleization,
-  "."/[crypto, datatypes, helpers, presets, beaconstate, digest]
+  "."/[
+    crypto, datatypes, helpers, presets, beaconstate, digest,
+    forkedbeaconstate_helpers]
 
 # Otherwise, error.
 import chronicles
@@ -94,7 +96,7 @@ proc addIndexedAttestation(
       sigs: var seq[SignatureSet],
       attestation: IndexedAttestation,
       validatorKeys: openArray[CookedPubKey],
-      state: StateData,
+      state: ForkedHashedBeaconState,
      ): Result[void, cstring] =
   ## Add an indexed attestation for batched BLS verification
   ## purposes
@@ -119,12 +121,13 @@ proc addAttestation(
       sigs: var seq[SignatureSet],
       attestation: Attestation,
       validatorKeys: openArray[CookedPubKey],
-      state: StateData,
+      state: ForkedHashedBeaconState,
       cache: var StateCache
      ): Result[void, cstring] =
+
   var inited = false
   var attestersAgg{.noInit.}: AggregatePublicKey
-  for valIndex in state.data.data.get_attesting_indices(
+  for valIndex in state.get_attesting_indices(
                     attestation.data,
                     attestation.aggregation_bits,
                     cache
@@ -246,7 +249,7 @@ proc collectSignatureSets*(
        sigs: var seq[SignatureSet],
        signed_block: SignedBeaconBlock,
        validatorKeys: openArray[CookedPubKey],
-       state: StateData,
+       state: ForkedHashedBeaconState,
        cache: var StateCache): Result[void, cstring] =
   ## Collect all signatures in a single signed block.
   ## This includes
@@ -377,6 +380,7 @@ proc collectSignatureSets*(
     ? sigs.addAttestation(
         signed_block.message.body.attestations[i],
         validatorKeys, state, cache)
+
 
   # 6. VoluntaryExits
   # ----------------------------------------------------
