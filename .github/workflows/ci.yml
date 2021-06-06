@@ -284,7 +284,7 @@ jobs:
           if [[ "${{ runner.os }}" == "macOS" ]]; then
             ulimit -n 1024
           fi
-          make -j$ncpu ARCH_OVERRIDE=$PLATFORM DISABLE_TEST_FIXTURES_SCRIPT=1 test
+          make -j$ncpu ARCH_OVERRIDE=$PLATFORM DISABLE_TEST_FIXTURES_SCRIPT=1 V=1 test
 
       # The upload creates a combined report that gets posted as a comment on the PR
       - name: Upload combined results
