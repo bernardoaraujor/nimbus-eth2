@@ -33,7 +33,7 @@ template callWithBS*(op: untyped, y: ForkedHashedBeaconState): untyped =
 # State-related functionality based on ForkedHashedBeaconState instead of BeaconState
 
 func assign*(tgt: var ForkedHashedBeaconState, src: ForkedHashedBeaconState) =
-  when false:
+  when true:
     # This doesn't seem to be an issue, but leaving it for now
     #
     # TODO does nimOldCaseObjects allow for incremental assignment of fields
