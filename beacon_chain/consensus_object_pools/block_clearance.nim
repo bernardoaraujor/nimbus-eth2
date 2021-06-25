@@ -47,7 +47,7 @@ template asSigVerified(x: phase0.SignedBeaconBlock):
     doAssert sizeof(phase0.SignedBeaconBlock) ==
       sizeof(phase0.SigVerifiedSignedBeaconBlock)
 
-  cast[ptr phase0.SigVerifiedSignedBeaconBlock](signedBlock.unsafeAddr)[]
+  cast[ptr phase0.SigVerifiedSignedBeaconBlock](x.unsafeAddr)[]
 
 template asSigVerified(x: altair.SignedBeaconBlock):
     altair.SigVerifiedSignedBeaconBlock =
@@ -57,7 +57,7 @@ template asSigVerified(x: altair.SignedBeaconBlock):
     doAssert sizeof(altair.SignedBeaconBlock) ==
       sizeof(altair.SigVerifiedSignedBeaconBlock)
 
-  cast[ptr altair.SigVerifiedSignedBeaconBlock](signedBlock.unsafeAddr)[]
+  cast[ptr altair.SigVerifiedSignedBeaconBlock](x.unsafeAddr)[]
 
 template asTrusted(x: phase0.SignedBeaconBlock or phase0.SigVerifiedBeaconBlock):
     phase0.TrustedSignedBeaconBlock =
@@ -66,7 +66,7 @@ template asTrusted(x: phase0.SignedBeaconBlock or phase0.SigVerifiedBeaconBlock)
   static: # TODO See isomorphicCast
     doAssert sizeof(x) == sizeof(phase0.TrustedSignedBeaconBlock)
 
-  cast[ptr phase0.TrustedSignedBeaconBlock](signedBlock.unsafeAddr)[]
+  cast[ptr phase0.TrustedSignedBeaconBlock](x.unsafeAddr)[]
 
 template asTrusted(x: altair.SignedBeaconBlock or altair.SigVerifiedBeaconBlock):
     altair.TrustedSignedBeaconBlock =
@@ -75,7 +75,7 @@ template asTrusted(x: altair.SignedBeaconBlock or altair.SigVerifiedBeaconBlock)
   static: # TODO See isomorphicCast
     doAssert sizeof(x) == sizeof(altair.TrustedSignedBeaconBlock)
 
-  cast[ptr altair.TrustedSignedBeaconBlock](signedBlock.unsafeAddr)[]
+  cast[ptr altair.TrustedSignedBeaconBlock](x.unsafeAddr)[]
 
 func batchVerify(quarantine: QuarantineRef, sigs: openArray[SignatureSet]): bool =
   var secureRandomBytes: array[32, byte]
@@ -227,7 +227,7 @@ proc checkStateTransition(
     return (ValidationResult.Reject, Invalid)
   return (ValidationResult.Accept, default(BlockError))
 
-proc advanceClearanceState*(dag: ChainDagRef) =
+proc advanceClearanceState*(dag: ChainDAGRef) =
   # When the chain is synced, the most likely block to be produced is the block
   # right after head - we can exploit this assumption and advance the state
   # to that slot before the block arrives, thus allowing us to do the expensive
