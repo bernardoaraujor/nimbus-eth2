@@ -1152,8 +1152,8 @@ proc new*(T: type Eth2Node, config: BeaconNodeConf, enrForkId: ENRForkID,
         msg.protocolMounter node
 
 
-  proc peerHook(peerId: PeerID, event: ConnEvent): Future[void] {.gcsafe.} =
-    onConnEvent(node, peerId, event)
+  proc peerHook(peerInfo: PeerInfo, event: ConnEvent): Future[void] {.gcsafe.} =
+    onConnEvent(node, peerInfo.peerId, event)
 
   try:
     switch.addConnEventHandler(peerHook, ConnEventKind.Connected)
